@@ -1,9 +1,7 @@
 
 # Calculator Smart Contract
 
-A Solidity-based smart contract implementing a basic arithmetic calculator with access control and automated validation using [Foundry](https://book.getfoundry.sh/).
-
-This project is designed to demonstrate core blockchain development practices, including state management, event emission, permission checks, and test-driven validation in a smart contract environment.
+Smart contract for a basic arithmetic calculator built on Ethereum using Solidity and [Foundry](https://book.getfoundry.sh/). The project implements addition, subtraction, multiplication, and division operations, with division restricted to the administrator account through explicit access control. It also includes event emission for operation tracking and a Foundry-based test suite covering unit and fuzz testing scenarios.
 
 ## Overview
 
