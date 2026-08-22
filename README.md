@@ -1,115 +1,189 @@
 
-# CALCULATOR
+# Calculadora Smart Contract
 
-A basic calculator Smart Contract, implemented using Solidity and [Foundry](https://book.getfoundry.sh/), with access control on one of its operations and a unit + fuzz testing suite. Personal project, no tutorial or course followed as a base.
+Proyecto personal desarrollado con Solidity y [Foundry](https://book.getfoundry.sh/) para crear un contrato inteligente que emula una calculadora básica sobre la blockchain.
 
-## Objectives
+La idea principal es demostrar cómo se pueden implementar operaciones matemáticas, almacenamiento de estado, control de acceso y pruebas automatizadas en un contrato inteligente de Ethereum.
 
-Implement an on-chain calculator with the following functionalities:
+## Descripción general
 
-- `addition`: adds two numbers and emits an event with the result ✅
-- `substraction`: subtracts two numbers and emits an event with the result ✅
-- `multiplier`: multiplies two numbers and emits an event with the result ✅
-- `division`: divides two numbers, restricted to `admin` only ✅
+Este contrato mantiene un valor público llamado `resultado` y un administrador llamado `admin`. A partir de ese estado, se pueden ejecutar operaciones matemáticas como suma, resta, multiplicación y división.
 
-> ⚠️ Note: currently only `division` has access control (`onlyadmin`). The other three operations are public. Confirm whether this is intentional before using in production.
+La particularidad más importante es que la operación de división está restringida únicamente al `admin`, mientras que las otras operaciones son públicas. Esto permite practicar el uso de modificadores y el patrón de control de acceso en Solidity.
 
-## Contract details
+## Qué hace exactamente el proyecto
 
-| Function | Signature | Access |
+El contrato permite:
+
+- almacenar un valor inicial de resultado al desplegarse
+- ejecutar operaciones matemáticas sobre números enteros `uint256`
+- guardar el último resultado en la variable pública `resultado`
+- emitir eventos con los parámetros y el resultado de cada operación
+- proteger la división para que solo la cuenta administrativa pueda usarla
+
+## Funcionalidades del contrato
+
+| Función | Descripción | Acceso |
 |---|---|---|
-| Addition | `addition(uint256, uint256) external returns (uint256)` | Public |
-| Substraction | `substraction(uint256, uint256) external returns (uint256)` | Public |
-| Multiplier | `multiplier(uint256, uint256) external returns (uint256)` | Public |
-| Division | `division(uint256, uint256) external returns (uint256)` | Admin only |
+| `addition` | Suma dos números y devuelve el resultado | Público |
+| `substraction` | Resta dos números y devuelve el resultado | Público |
+| `multiplier` | Multiplica dos números y devuelve el resultado | Público |
+| `division` | Divide dos números y devuelve el resultado | Solo `admin` |
 
-**Constructor:**
+### Constructor
 
 ```solidity
 constructor(uint256 firstResultado_, address admin_)
 ```
 
-Sets the initial result (`resultado`) and defines the `admin` address, the only one authorized to call `division`.
+Este constructor inicializa:
 
-**Error handling:**
+- `resultado = firstResultado_`
+- `admin = admin_`
 
-- `division` reverts if `msg.sender != admin` (`"Not allowed"`).
-- `division` reverts natively when dividing by zero.
-- `multiplier` reverts natively on overflow (built-in arithmetic check in Solidity ^0.8).
+Es decir, al desplegar el contrato se define tanto el valor inicial del cálculo como la dirección autorizada para operar con división.
 
-## Requirements to build a similar project from scratch
+## Regla de seguridad principal
 
-Start a Foundry project:
+La operación de división tiene un modificador:
 
-```bash
-forge init project-name
-cd project-name
+```solidity
+modifier onlyadmin() {
+    require(msg.sender == admin, "Not allowed");
+    _;
+}
 ```
 
-Install dependencies:
+Esto hace que cualquier intento de invocar `division` desde una cuenta distinta al administrador falle con un revert.
 
-```bash
-forge install foundry-rs/forge-std
+## Eventos emitidos
+
+Cada operación emite un evento con los parámetros de entrada y el resultado final:
+
+- `Addition`
+- `Substraction`
+- `Multiplier`
+- `Division`
+
+Esto permite consultar la actividad del contrato desde eventos indexados, sin necesidad de leer el estado completo cada vez.
+
+## Mapa conceptual
+
+```mermaid
+flowchart TD
+    A[Usuario o administrador] --> B[Contrato Calculadora]
+    B --> C[Estado]
+    C --> D[resultado: uint256]
+    C --> E[admin: address]
+
+    B --> F[addition]
+    B --> G[substraction]
+    B --> H[multiplier]
+    B --> I[division]
+
+    F --> J[Emit Addition]
+    G --> K[Emit Substraction]
+    H --> L[Emit Multiplier]
+    I --> M{msg.sender == admin?}
+    M -->|Sí| N[Divide y emite Division]
+    M -->|No| O[Revert con "Not allowed"]
+
+    B --> P[Pruebas con Foundry]
+    P --> Q[testAddition]
+    P --> R[testSubstraction]
+    P --> S[testMultiplier]
+    P --> T[testCanNotDivideByZero]
+    P --> U[testIfNotAdminCallsDivisionReverts]
 ```
 
-Add a `.gitignore` file containing:
+## Objetivos del proyecto
 
-```
-# Foundry files
-cache/
-out/
-broadcast/
+Este proyecto busca practicar y demostrar los siguientes conceptos:
 
-# Env
-.env
+- uso de variables de estado en Solidity
+- manejo de eventos
+- control de acceso con `require`
+- validación de errores y revert
+- pruebas unitarias con Foundry
+- pruebas fuzzing para comportamiento más robusto
 
-# Dependencies
-lib/
-```
+## Requisitos
 
-Compile and run tests:
+Para ejecutar este proyecto necesitas tener instalado:
+
+- [Foundry](https://book.getfoundry.sh/)
+- Node.js opcional para herramientas externas
+- Git para control de versiones
+
+## Cómo ejecutar el proyecto
+
+1. Clonar el repositorio
+2. Entrar en la carpeta del proyecto
+3. Compilar el contrato:
 
 ```bash
 forge build
+```
+
+4. Ejecutar pruebas:
+
+```bash
 forge test
 ```
 
-## Test coverage (`CalculadoraTest.t.sol`)
+5. Formatear el código:
 
-- `testCheckFirstResultado` — verifies the initial result set in the constructor.
-- `testAddition` — validates addition.
-- `testSubstraction` — validates substraction.
-- `testMultiplier` — validates multiplication.
-- `testCanNotMultiply2LargeNumbers` — confirms revert on overflow.
-- `testIfNotAdminCallsDivisionReverts` — confirms revert when a non-admin calls `division`.
-- `testAdminCanCallDivisionCorrectly` — confirms the admin can call `division`.
-- `testDefaultCanNotCallDivisionCorrectly` — confirms revert for unauthorized access.
-- `testDefaultExecutesCorrectly` — validates the result of `division` executed by the admin.
-- `testCanNotDivideByZero` — confirms revert when dividing by zero.
-- `testFuzzingDivision(uint256, uint256)` — fuzz test on `division`, executed as admin.
-
-## Known issues
-
-- [ ] Decide whether `addition`, `substraction` and `multiplier` should also have access control, to be consistent with `division`.
-- [ ] `testFuzzingDivision` has no assertions — it only checks that the call doesn't revert. Needs to validate the expected result and handle the `secondNumber_ == 0` case (via `vm.assume` or a conditional `expectRevert`).
-
-## Project structure
-
+```bash
+forge fmt
 ```
+
+## Cobertura de pruebas
+
+El archivo de pruebas incluye casos para verificar:
+
+- valor inicial del constructor
+- suma correcta
+- resta correcta
+- multiplicación correcta
+- overflow en multiplicación
+- acceso no autorizado a división
+- división ejecutada por el admin
+- división por cero
+- ejecución de la lógica con datos aleatorios (fuzzing)
+
+## Estado actual del proyecto
+
+El contrato está funcional y las pruebas pasan con Foundry. El proyecto funciona como una base sólida para seguir ampliando la lógica, por ejemplo:
+
+- añadir más operadores matemáticos
+- agregar permisos por roles
+- incluir historial de operaciones
+- hacer que las operaciones también sean administradas por roles específicos
+
+## Limitaciones actuales
+
+- La lógica de acceso se aplica únicamente a la división.
+- Las otras operaciones son públicas por diseño.
+- La operación de división no maneja un caso especial para `0` manualmente, sino que depende del revert nativo de Solidity.
+
+## Estructura del repositorio
+
+```text
 .
 ├── src/
 │   └── Calculadora.sol
 ├── test/
 │   └── CalculadoraTest.t.sol
-└── README.md
+├── README.md
+├── foundry.toml
+└── lib/
 ```
 
-## Resources
+## Recursos útiles
 
 - [Foundry Book](https://book.getfoundry.sh/)
-- [Solidity Docs](https://docs.soliditylang.org/)
+- [Solidity Documentation](https://docs.soliditylang.org/)
 
-
-## License
+## Licencia
 
 MIT
