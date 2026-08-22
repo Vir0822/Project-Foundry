@@ -121,6 +121,10 @@ The project includes automated tests covering:
 - division by zero handling
 - fuzz testing with random inputs
 
+## Concept map
+
+![Calculator Smart Contract concept map](assets/concept-map.svg)
+
 ## Current status
 
 The contract is functional and the test suite passes successfully with Foundry. It provides a solid foundation for extending the project with more advanced smart contract patterns and production-ready logic.

@@ -1,0 +1,78 @@
+<svg width="1100" height="520" viewBox="0 0 1100 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Calculator Smart Contract Concept Map</title>
+  <desc id="desc">A conceptual map showing users, contract state, operations, access control, and validation.</desc>
+  <defs>
+    <style>
+      .title { font: 700 26px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 600 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .label { font: 600 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .small { font: 13px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .box { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 14; }
+      .main { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2; rx: 14; }
+      .admin { fill: #dcfce7; stroke: #16a34a; stroke-width: 2; rx: 14; }
+      .warning { fill: #fef3c7; stroke: #d97706; stroke-width: 2; rx: 14; }
+      .test { fill: #ede9fe; stroke: #7c3aed; stroke-width: 2; rx: 14; }
+      .arrow { stroke: #475569; stroke-width: 2.2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-dashed { stroke: #0f172a; stroke-width: 2; stroke-dasharray: 8 8; fill: none; marker-end: url(#arrowhead); }
+      .node-text { font: 600 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .small-node { font: 12px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1100" height="520" fill="#ffffff"/>
+  <text x="550" y="42" text-anchor="middle" class="title">Calculator Smart Contract</text>
+  <text x="550" y="70" text-anchor="middle" class="subtitle">Conceptual flow and system overview</text>
+
+  <rect x="70" y="120" width="180" height="86" class="box"/>
+  <text x="160" y="155" text-anchor="middle" class="label">User</text>
+  <text x="160" y="178" text-anchor="middle" class="small">Wallet or caller</text>
+
+  <rect x="310" y="120" width="220" height="110" class="main"/>
+  <text x="420" y="155" text-anchor="middle" class="label">Calculator Contract</text>
+  <text x="420" y="178" text-anchor="middle" class="small">State + logic + events</text>
+
+  <rect x="620" y="120" width="195" height="110" class="admin"/>
+  <text x="717" y="155" text-anchor="middle" class="label">Admin</text>
+  <text x="717" y="178" text-anchor="middle" class="small">Authorized address</text>
+
+  <rect x="75" y="270" width="240" height="150" class="box"/>
+  <text x="195" y="300" text-anchor="middle" class="label">Contract State</text>
+  <text x="195" y="330" text-anchor="middle" class="small">resultado: uint256</text>
+  <text x="195" y="355" text-anchor="middle" class="small">admin: address</text>
+  <text x="195" y="380" text-anchor="middle" class="small">emitted events</text>
+
+  <rect x="390" y="285" width="170" height="120" class="box"/>
+  <text x="475" y="315" text-anchor="middle" class="label">Operations</text>
+  <text x="475" y="340" text-anchor="middle" class="small">addition</text>
+  <text x="475" y="362" text-anchor="middle" class="small">substraction</text>
+  <text x="475" y="384" text-anchor="middle" class="small">multiplier</text>
+  <text x="475" y="406" text-anchor="middle" class="small">division</text>
+
+  <rect x="640" y="285" width="230" height="120" class="warning"/>
+  <text x="755" y="315" text-anchor="middle" class="label">Access Control</text>
+  <text x="755" y="340" text-anchor="middle" class="small">division requires</text>
+  <text x="755" y="363" text-anchor="middle" class="small">msg.sender == admin</text>
+  <text x="755" y="386" text-anchor="middle" class="small">otherwise revert</text>
+
+  <rect x="910" y="220" width="180" height="150" class="test"/>
+  <text x="1000" y="250" text-anchor="middle" class="label">Validation</text>
+  <text x="1000" y="278" text-anchor="middle" class="small">Foundry tests</text>
+  <text x="1000" y="301" text-anchor="middle" class="small">unit checks</text>
+  <text x="1000" y="324" text-anchor="middle" class="small">revert cases</text>
+  <text x="1000" y="347" text-anchor="middle" class="small">fuzz tests</text>
+
+  <path d="M250 163 H310" class="arrow"/>
+  <path d="M530 163 H620" class="arrow"/>
+  <path d="M420 230 V270" class="arrow"/>
+  <path d="M560 330 H640" class="arrow"/>
+  <path d="M870 330 H910" class="arrow"/>
+  <path d="M717 230 V285" class="arrow-dashed"/>
+
+  <text x="420" y="250" text-anchor="middle" class="small">executions</text>
+  <text x="590" y="312" text-anchor="middle" class="small">authorized call</text>
+  <text x="895" y="315" text-anchor="middle" class="small">checks</text>
+  <text x="719" y="260" text-anchor="middle" class="small">admin-only access</text>
+</svg>
