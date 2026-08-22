@@ -1,34 +1,34 @@
 
-# Calculadora Smart Contract
+# Calculator Smart Contract
 
-Proyecto personal desarrollado con Solidity y [Foundry](https://book.getfoundry.sh/) para crear un contrato inteligente que emula una calculadora básica sobre la blockchain.
+A personal project built with Solidity and [Foundry](https://book.getfoundry.sh/) to create a smart contract that emulates a basic calculator on the blockchain.
 
-La idea principal es demostrar cómo se pueden implementar operaciones matemáticas, almacenamiento de estado, control de acceso y pruebas automatizadas en un contrato inteligente de Ethereum.
+The main goal is to demonstrate how arithmetic operations, state persistence, access control, and automated testing can be implemented in an Ethereum smart contract.
 
-## Descripción general
+## Overview
 
-Este contrato mantiene un valor público llamado `resultado` y un administrador llamado `admin`. A partir de ese estado, se pueden ejecutar operaciones matemáticas como suma, resta, multiplicación y división.
+This contract stores a public value called `resultado` and an administrator named `admin`. Based on this state, it can perform basic mathematical operations such as addition, subtraction, multiplication, and division.
 
-La particularidad más importante es que la operación de división está restringida únicamente al `admin`, mientras que las otras operaciones son públicas. Esto permite practicar el uso de modificadores y el patrón de control de acceso en Solidity.
+The key characteristic is that division is restricted to the `admin`, while the other operations remain public. This makes it a practical example of access control patterns in Solidity.
 
-## Qué hace exactamente el proyecto
+## What the project does
 
-El contrato permite:
+The contract allows:
 
-- almacenar un valor inicial de resultado al desplegarse
-- ejecutar operaciones matemáticas sobre números enteros `uint256`
-- guardar el último resultado en la variable pública `resultado`
-- emitir eventos con los parámetros y el resultado de cada operación
-- proteger la división para que solo la cuenta administrativa pueda usarla
+- setting an initial result when deployed
+- performing arithmetic operations on `uint256` values
+- storing the latest result in the public variable `resultado`
+- emitting events with the input values and the calculated result
+- restricting division so only the authorized account can execute it
 
-## Funcionalidades del contrato
+## Contract features
 
-| Función | Descripción | Acceso |
+| Function | Description | Access |
 |---|---|---|
-| `addition` | Suma dos números y devuelve el resultado | Público |
-| `substraction` | Resta dos números y devuelve el resultado | Público |
-| `multiplier` | Multiplica dos números y devuelve el resultado | Público |
-| `division` | Divide dos números y devuelve el resultado | Solo `admin` |
+| `addition` | Adds two numbers and returns the result | Public |
+| `substraction` | Subtracts two numbers and returns the result | Public |
+| `multiplier` | Multiplies two numbers and returns the result | Public |
+| `division` | Divides two numbers and returns the result | Admin only |
 
 ### Constructor
 
@@ -36,16 +36,16 @@ El contrato permite:
 constructor(uint256 firstResultado_, address admin_)
 ```
 
-Este constructor inicializa:
+This constructor initializes:
 
 - `resultado = firstResultado_`
 - `admin = admin_`
 
-Es decir, al desplegar el contrato se define tanto el valor inicial del cálculo como la dirección autorizada para operar con división.
+So when the contract is deployed, it defines both the starting value and the authorized address allowed to execute division.
 
-## Regla de seguridad principal
+## Security rule
 
-La operación de división tiene un modificador:
+The division function uses the following modifier:
 
 ```solidity
 modifier onlyadmin() {
@@ -54,25 +54,25 @@ modifier onlyadmin() {
 }
 ```
 
-Esto hace que cualquier intento de invocar `division` desde una cuenta distinta al administrador falle con un revert.
+This ensures that any call to `division` from an unauthorized address reverts.
 
-## Eventos emitidos
+## Emitted events
 
-Cada operación emite un evento con los parámetros de entrada y el resultado final:
+Each operation emits an event with the input values and final result:
 
 - `Addition`
 - `Substraction`
 - `Multiplier`
 - `Division`
 
-Esto permite consultar la actividad del contrato desde eventos indexados, sin necesidad de leer el estado completo cada vez.
+This makes it possible to track activity from indexed logs without reading the full contract state every time.
 
-## Mapa conceptual
+## Conceptual map
 
 ```mermaid
 flowchart TD
-    A[Usuario o administrador] --> B[Contrato Calculadora]
-    B --> C[Estado]
+    A[User or admin] --> B[Calculator Contract]
+    B --> C[Contract state]
     C --> D[resultado: uint256]
     C --> E[admin: address]
 
@@ -81,92 +81,94 @@ flowchart TD
     B --> H[multiplier]
     B --> I[division]
 
-    F --> J[Emit Addition]
-    G --> K[Emit Substraction]
-    H --> L[Emit Multiplier]
-    I --> M{msg.sender == admin?}
-    M -->|Sí| N[Divide y emite Division]
-    M -->|No| O[Revert con "Not allowed"]
+    F --> J[Emit Addition event]
+    G --> K[Emit Substraction event]
+    H --> L[Emit Multiplier event]
 
-    B --> P[Pruebas con Foundry]
+    I --> M{Caller is admin?}
+    M -->|Yes| N[Compute division and emit Division event]
+    M -->|No| O[Revert with \"Not allowed\"]
+
+    B --> P[Foundry tests]
     P --> Q[testAddition]
     P --> R[testSubstraction]
     P --> S[testMultiplier]
     P --> T[testCanNotDivideByZero]
     P --> U[testIfNotAdminCallsDivisionReverts]
+    P --> V[testAdminCanCallDivisionCorrectly]
 ```
 
-## Objetivos del proyecto
+## Project objectives
 
-Este proyecto busca practicar y demostrar los siguientes conceptos:
+This project is designed to practice and demonstrate the following Solidity and Foundry concepts:
 
-- uso de variables de estado en Solidity
-- manejo de eventos
-- control de acceso con `require`
-- validación de errores y revert
-- pruebas unitarias con Foundry
-- pruebas fuzzing para comportamiento más robusto
+- state variables and contract storage
+- event emission
+- access control using `require`
+- revert handling and error validation
+- unit testing with Foundry
+- fuzz testing for more robust behavior checks
 
-## Requisitos
+## Requirements
 
-Para ejecutar este proyecto necesitas tener instalado:
+To run this project, you need:
 
 - [Foundry](https://book.getfoundry.sh/)
-- Node.js opcional para herramientas externas
-- Git para control de versiones
+- Git
+- optionally Node.js for tooling support
 
-## Cómo ejecutar el proyecto
+## How to run the project
 
-1. Clonar el repositorio
-2. Entrar en la carpeta del proyecto
-3. Compilar el contrato:
+1. Clone the repository
+2. Go to the project folder
+3. Compile the contract:
 
 ```bash
 forge build
 ```
 
-4. Ejecutar pruebas:
+4. Run the tests:
 
 ```bash
 forge test
 ```
 
-5. Formatear el código:
+5. Format the code:
 
 ```bash
 forge fmt
 ```
 
-## Cobertura de pruebas
+## Test coverage
 
-El archivo de pruebas incluye casos para verificar:
+The test suite checks:
 
-- valor inicial del constructor
-- suma correcta
-- resta correcta
-- multiplicación correcta
-- overflow en multiplicación
-- acceso no autorizado a división
-- división ejecutada por el admin
-- división por cero
-- ejecución de la lógica con datos aleatorios (fuzzing)
+- constructor value initialization
+- correct addition
+- correct subtraction
+- correct multiplication
+- overflow protection in multiplication
+- unauthorized access to division
+- successful division by admin
+- division by zero reversion
+- fuzz execution with random values
 
-## Estado actual del proyecto
+## Current project status
 
-El contrato está funcional y las pruebas pasan con Foundry. El proyecto funciona como una base sólida para seguir ampliando la lógica, por ejemplo:
+The contract is functional and the tests pass with Foundry. It is a solid base for future extensions such as:
 
-- añadir más operadores matemáticos
-- agregar permisos por roles
-- incluir historial de operaciones
-- hacer que las operaciones también sean administradas por roles específicos
+- additional arithmetic operators
+- role-based permissions
+- operation history tracking
+- more advanced access control rules
 
-## Limitaciones actuales
+## Current limitations
 
-- La lógica de acceso se aplica únicamente a la división.
-- Las otras operaciones son públicas por diseño.
-- La operación de división no maneja un caso especial para `0` manualmente, sino que depende del revert nativo de Solidity.
+- Access control is only applied to division.
+- Other operations are intentionally public.
+- The division operation relies on Solidity’s native revert behavior for zero division and unauthorized access.
 
-## Estructura del repositorio
+## Repository structure
 
 ```text
 .
@@ -179,11 +181,11 @@ El contrato está funcional y las pruebas pasan con Foundry. El proyecto funcion
 └── lib/
 ```
 
-## Recursos útiles
+## Useful resources
 
 - [Foundry Book](https://book.getfoundry.sh/)
 - [Solidity Documentation](https://docs.soliditylang.org/)
 
-## Licencia
+## License
 
 MIT
