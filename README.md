@@ -1,15 +1,15 @@
 
 # Calculator Smart Contract
 
-A Solidity-based smart contract implementing a basic calculator with access control and automated validation using [Foundry](https://book.getfoundry.sh/).
+A Solidity-based smart contract implementing a basic arithmetic calculator with access control and automated validation using [Foundry](https://book.getfoundry.sh/).
 
-This project demonstrates core blockchain development principles, including state management, event emission, permission checks, and test-driven validation in a smart contract environment.
+This project is designed to demonstrate core blockchain development practices, including state management, event emission, permission checks, and test-driven validation in a smart contract environment.
 
 ## Overview
 
 The contract maintains a public state variable named `resultado` and an administrator address named `admin`. It supports basic arithmetic operations including addition, subtraction, multiplication, and division.
 
-Division is restricted to the contract administrator, while the remaining operations are public. This pattern is useful for demonstrating permission-based logic and contract security practices in Solidity.
+Division is restricted to the contract administrator, while the remaining operations remain public. This pattern highlights access-control logic and security best practices in Solidity-based applications.
 
 ## Functionalities
 
@@ -40,7 +40,7 @@ The constructor initializes:
 - `resultado = firstResultado_`
 - `admin = admin_`
 
-This defines the initial state of the contract and the authorized account allowed to call the division function.
+This defines the initial state of the contract and the authorized address permitted to execute division.
 
 ## Access control
 
@@ -53,49 +53,49 @@ modifier onlyadmin() {
 }
 ```
 
-Any call to `division` from an unauthorized address triggers a revert with the message `Not allowed`.
+Any call to `division` from an unauthorized account triggers a revert with the message `Not allowed`.
 
 ## Events
 
-Each operation emits an event containing the input parameters and the resulting value:
+Each operation emits an event containing the input values and the resulting output:
 
 - `Addition`
 - `Substraction`
 - `Multiplier`
 - `Division`
 
-These events provide traceability and allow external consumers to track contract activity without reading the full state directly.
+These events provide traceability and allow external consumers to monitor contract activity without directly reading the full state.
 
-## Project objectives
+## Objectives
 
-This project is intended to showcase the following engineering concepts:
+This project is intended to showcase the following engineering principles:
 
-- Solidity state variables and contract design
-- event-driven contract interaction
-- access control patterns
-- error handling with `require` and reverts
+- Solidity state handling and contract design
+- event-driven interaction patterns
+- access control implementation
+- error handling through reverts and validation logic
 - automated testing with Foundry
 - fuzz testing for edge-case validation
 
 ## Requirements
 
-To run this project locally, you need:
+To run this project locally, the following tools are required:
 
 - [Foundry](https://book.getfoundry.sh/)
 - Git
-- optionally Node.js for supporting tooling
+- Node.js for optional tooling support
 
 ## Getting started
 
-1. Clone the repository
-2. Navigate to the project directory
+1. Clone the repository.
+2. Navigate to the project directory.
 3. Compile the project:
 
 ```bash
 forge build
 ```
 
-4. Run the tests:
+4. Run the test suite:
 
 ```bash
 forge test
@@ -119,17 +119,17 @@ The project includes automated tests covering:
 - unauthorized division attempts
 - authorized division execution
 - division by zero handling
-- fuzz testing for random values
+- fuzz testing with random inputs
 
 ## Current status
 
-The contract is fully functional and the test suite passes with Foundry. It serves as a solid foundation for extending the project with more advanced smart contract patterns.
+The contract is functional and the test suite passes successfully with Foundry. It provides a solid foundation for extending the project with more advanced smart contract patterns and production-ready logic.
 
 ## Current limitations
 
 - Access control is currently applied only to division.
 - Other arithmetic functions remain public by design.
-- Division relies on Solidity’s native revert behavior for invalid or zero-value paths.
+- Division relies on Solidity’s native revert behavior for invalid and zero-value paths.
 
 ## Repository structure
 
