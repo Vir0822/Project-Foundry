@@ -67,37 +67,6 @@ Each operation emits an event with the input values and final result:
 
 This makes it possible to track activity from indexed logs without reading the full contract state every time.
 
-## Conceptual map
-
-```mermaid
-flowchart TD
-    A[User or admin] --> B[Calculator Contract]
-    B --> C[Contract state]
-    C --> D[resultado: uint256]
-    C --> E[admin: address]
-
-    B --> F[addition]
-    B --> G[substraction]
-    B --> H[multiplier]
-    B --> I[division]
-
-    F --> J[Emit Addition event]
-    G --> K[Emit Substraction event]
-    H --> L[Emit Multiplier event]
-
-    I --> M{Caller is admin?}
-    M -->|Yes| N[Compute division and emit Division event]
-    M -->|No| O[Revert with \"Not allowed\"]
-
-    B --> P[Foundry tests]
-    P --> Q[testAddition]
-    P --> R[testSubstraction]
-    P --> S[testMultiplier]
-    P --> T[testCanNotDivideByZero]
-    P --> U[testIfNotAdminCallsDivisionReverts]
-    P --> V[testAdminCanCallDivisionCorrectly]
-```
-
 ## Project objectives
 
 This project is designed to practice and demonstrate the following Solidity and Foundry concepts:
