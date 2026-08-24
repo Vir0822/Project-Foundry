@@ -155,3 +155,6 @@ The contract is functional and the test suite passes successfully with Foundry. 
 ## License
 
 MIT
+
+## Author
+Virginia Villela|Blockchain Developer
